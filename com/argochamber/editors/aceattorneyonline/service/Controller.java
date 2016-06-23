@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Ace Attorney Online Editor (AAOE) -  A Simple AAOE Case editor.
+ * Copyright (C) Argochamber Interactive 2016
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.argochamber.editors.aceattorneyonline.service;
 
@@ -40,14 +52,28 @@ import org.ini4j.Profile.Section;
  */
 public class Controller {
     
+    /**
+     * String constants
+     */
     public static final String VALUE_LAST_PATH = "lastpath",
             SECTION_LAST = "last",
             CONFIG_FILE = "config.ini",
             ACTORS_JUDGE = "Judge",
             ACTORS_JUDGE_DESC = "The judge of the case.";
     
+    /**
+     * The view of the path selection
+     */
     private WorkspaceInput pathView;
+    
+    /**
+     * The main view
+     */
     private MainView mainView;
+    
+    /**
+     * Workspae manager
+     */
     private Workspace workspace;
 
     /**
@@ -68,19 +94,19 @@ public class Controller {
             try {
                 cfg.createNewFile();
                 Ini icfg = new Ini(cfg);
-                Section sec = icfg.add(SECTION_LAST);
+                Section sec = (Section)icfg.add(SECTION_LAST);
                 sec.add(VALUE_LAST_PATH, "not set");
                 icfg.store();
             } catch (IOException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                Log.log(Level.SEVERE, ex);
             }
         } else {
             try {
                 Ini icfg = new Ini(cfg);
-                Map<String, String> lastkp = icfg.get(SECTION_LAST);
+                Map<String, String> lastkp = (Section)icfg.get(SECTION_LAST);
                 this.pathView.setPath(lastkp.get(VALUE_LAST_PATH));
             } catch (IOException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                Log.log(Level.SEVERE, ex);
             }
         }
 
@@ -97,8 +123,8 @@ public class Controller {
     /**
      * This will checkout the path.
      *
-     * @param path
-     * @param err
+     * @param path The path to check out
+     * @param err The dialog that handles the error.
      */
     public void pathCheckAction(String path, JDialog err) {
         try {
@@ -109,7 +135,7 @@ public class Controller {
             //This will setup the views
             setupMainView();
         } catch (InvalidWorkspaceException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            Log.log(Level.SEVERE, ex);
             err.setVisible(true);
         }
     }
@@ -130,8 +156,8 @@ public class Controller {
     }
     /**
      * Attempt to delete a directory tree.
-     * @param path
-     * @throws IOException 
+     * @param path The directory tree to delete.
+     * @throws IOException Thrown whenever an IO Problem occurs on deletion.
      */
     public static void deleteFileOrFolder(final Path path) throws IOException {
         Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -168,7 +194,7 @@ public class Controller {
     
     /**
      * This deletes the requested scene from folder and views.
-     * @param scene 
+     * @param scene The scene reference.
      * @return  if could be deleted or not.
      */
     public boolean deleteScene(Scene scene) {
@@ -216,7 +242,7 @@ public class Controller {
     
     /**
      * This adds a new scene to the workspace.
-     * @param newScene 
+     * @param newScene The new scene's name.
      * @return  The newly created scene.
      */
     public Scene newScene(String newScene) {
@@ -226,39 +252,55 @@ public class Controller {
         try {
             setupCaseData(scene, view);
         } catch (IOException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            Log.log(Level.SEVERE, ex);
         }
         return scene;
     }
     
     /**
      * This will set the last path used at config.ini.
-     * @param file 
+     * @param file This is the last path used for the project (Workspace root)
      */
     public void setLastPath(String file) {
         try {
             Ini cfg = new Ini(new File(CONFIG_FILE));
-            Section l = cfg.get(SECTION_LAST);
+            Section l = (Section)cfg.get(SECTION_LAST);
             l.remove(VALUE_LAST_PATH);
             l.add(VALUE_LAST_PATH, file);
             cfg.store();
         } catch (IOException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            Log.log(Level.SEVERE, ex);
         }
     }
     
+    /**
+     * Getter for the worspace path input view.
+     * @return The view
+     */
     public WorkspaceInput getPathView() {
         return pathView;
     }
 
+    /**
+     * Setter for the worspace path input view.
+     * @param pathView the view
+     */
     public void setPathView(WorkspaceInput pathView) {
         this.pathView = pathView;
     }
 
+    /**
+     * Getter for the main view ref.
+     * @return the view
+     */
     public MainView getMainView() {
         return mainView;
     }
 
+    /**
+     * Setter for the main view ref.
+     * @param mainView the view
+     */
     public void setMainView(MainView mainView) {
         this.mainView = mainView;
     }
@@ -303,8 +345,8 @@ public class Controller {
 
     /**
      * Updates the actor's list at the given index, where the index is the key of the scene.
-     * @param index
-     * @param actors
+     * @param index The scene's index
+     * @param actors the actor list (new actors and old ones mixed)
      */
     public void updateActorsAt(int index, List<Actor> actors) {
         this.workspace.getScenes().get(index).setActors(actors);
@@ -313,7 +355,7 @@ public class Controller {
     
     /**
      * Gathers a list of actors from the workspace.
-     * @return 
+     * @return list of actors
      */
     public List<File> getAvailableActors() {
         return this.workspace.getActors();
@@ -321,8 +363,8 @@ public class Controller {
 
     /**
      * This deletes the actor at the given scene.
-     * @param actor
-     * @param scene
+     * @param actor The actor's reference
+     * @param scene The scene contained in.
      */
     public void deleteActor(Actor actor, Scene scene) {
         
@@ -333,7 +375,7 @@ public class Controller {
 
     /**
      * Gets the absolute list of actors.
-     * @return 
+     * @return Actors available in the wksp
      */
     public List<File> getActorList() {
         return this.workspace.getActors();
@@ -341,8 +383,8 @@ public class Controller {
     
     /**
      * This will remove the evidence by reference.
-     * @param evidence 
-     * @param scene 
+     * @param evidence The evidence's reference
+     * @param scene The scene's reference
      */
     public void deleteEvidence(Evidence evidence, Scene scene) {
         scene.getEvidences().remove(evidence);
@@ -351,8 +393,12 @@ public class Controller {
     
     /**
      * Updates the evidence list at the given scene.
-     * @param sceneId
-     * @param evidences 
+     * <p>
+     *  Works like the updateActorsAt(...) method.
+     * </p>
+     * @see #updateActorsAt(int, java.util.List) 
+     * @param sceneId the scene's index
+     * @param evidences the listst of evidences.
      */
     public void updateEvidencesAt(int sceneId, List<Evidence> evidences) {
         this.workspace.getScenes().get(sceneId).setEvidences(evidences);
@@ -361,7 +407,7 @@ public class Controller {
 
     /**
      * Gets a list of available backgrounds.
-     * @return 
+     * @return The BGs in the wksp
      */
     public List<String> getAvailableBackgrounds() {
         return this.workspace.getBackgrounds().stream().map(File::getName).collect(Collectors.toList());

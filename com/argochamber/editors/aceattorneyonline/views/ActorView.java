@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Ace Attorney Online Editor (AAOE) -  A Simple AAOE Case editor.
+ * Copyright (C) Argochamber Interactive 2016
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.argochamber.editors.aceattorneyonline.views;
 
@@ -23,21 +35,31 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 /**
- *
+ * This view holds the information of the actors.
  * @author Pablo
  */
 public class ActorView extends javax.swing.JPanel {
     
-    
+    /**
+     * Controller's refernece.
+     */
     private final Controller controller;
+    
+    /**
+     * Actor data reference
+     */
     private final Actor actor;
+    
+    /**
+     * The actor's scene origin reference
+     */
     private final Scene scene;
 
     /**
-     * 
-     * @param actor
-     * @param scene
-     * @param controller 
+     * Creates a new view
+     * @param actor Actor reference
+     * @param scene Scene reference
+     * @param controller Controller reference
      */
     public ActorView(Actor actor, Scene scene, Controller controller){
         initComponents();
@@ -177,15 +199,28 @@ public class ActorView extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * uselsess
+     * @param evt ???
+     * @deprecated 
+     */
     private void removeActorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeActorActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_removeActorActionPerformed
 
+    /**
+     * This deletes the actor and it's data within the scene.
+     * @param evt Event that triggered the action.
+     */
     private void removeActorMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeActorMouseReleased
         // Handle the actor removal request.
         this.controller.deleteActor(this.actor, this.scene);
     }//GEN-LAST:event_removeActorMouseReleased
 
+    /**
+     * This will show up when editing the evidence list.
+     * @param evt  Event that triggered the action.
+     */
     private void editEvListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editEvListMouseReleased
         // We need to edit evidences!
         
@@ -233,6 +268,10 @@ public class ActorView extends javax.swing.JPanel {
         System.out.println("Evlist: "+this.actor.getEvidenceIds()+"\n\n");
     }//GEN-LAST:event_editEvListMouseReleased
 
+    /**
+     * This opens the editor for the character's data.
+     * @param evt Event that triggered the action.
+     */
     private void editCharMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editCharMouseReleased
         //Now, create a pop-up to get the new character data.
         JTextArea actorDesc = new JTextArea();
@@ -275,7 +314,7 @@ public class ActorView extends javax.swing.JPanel {
     
     /**
      * Gets the actor's name.
-     * @return 
+     * @return string actor's name
      */
     public String getActorName() {
         return this.charName.getText();
@@ -283,7 +322,7 @@ public class ActorView extends javax.swing.JPanel {
     
     /**
      * Gets the actor's desc.
-     * @return 
+     * @return string actor's desc
      */
     public String getActorDesc() {
         return this.charDesc.getText();
@@ -291,7 +330,7 @@ public class ActorView extends javax.swing.JPanel {
     
     /**
      * Casts itself to actor.
-     * @return 
+     * @return Creates (like casting) a new actor with the view's data.
      */
     public Actor asActor(){
         Actor act = new Actor();

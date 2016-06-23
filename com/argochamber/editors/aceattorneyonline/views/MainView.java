@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Ace Attorney Online Editor (AAOE) -  A Simple AAOE Case editor.
+ * Copyright (C) Argochamber Interactive 2016
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.argochamber.editors.aceattorneyonline.views;
 
@@ -20,7 +32,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
- *
+ * The main app view.
  * @author Pablo
  */
 public class MainView extends javax.swing.JFrame {
@@ -33,10 +45,10 @@ public class MainView extends javax.swing.JFrame {
     /**
      * Creates new form MainView
      *
-     * @param c
+     * @param controller Controller's reference
      */
-    public MainView(Controller c) {
-        this.controller = c;
+    public MainView(Controller controller) {
+        this.controller = controller;
         initComponents();
     }
 
@@ -290,19 +302,19 @@ public class MainView extends javax.swing.JFrame {
     /**
      * Add a new tab! NOICE
      *
-     * @param ref
-     * @return
+     * @param sceneReference The scene's reference
+     * @return The view added to the tab list.
      */
-    public SceneView addNewTab(Scene ref) {
-        SceneView view = new SceneView(this.controller, ref);
-        this.tabs.addTab(ref.getName(), view);
+    public SceneView addNewTab(Scene sceneReference) {
+        SceneView view = new SceneView(this.controller, sceneReference);
+        this.tabs.addTab(sceneReference.getName(), view);
         return view;
     }
 
     /**
      * This deletes the scene tab by reference.
      *
-     * @param scene
+     * @param scene The scene's index
      */
     public void deleteByRef(Scene scene) {
         int rem = -1;
@@ -318,14 +330,14 @@ public class MainView extends javax.swing.JFrame {
     /**
      * Looks for the given tabname, then renames it.
      *
-     * @param name
-     * @param name0
+     * @param oldName The old name
+     * @param newName The new name
      */
-    public void renameTab(String name, String name0) {
+    public void renameTab(String oldName, String newName) {
         boolean exit = false;
         for (int i = 0; i < this.tabs.getTabCount() && !exit; i++) {
-            if (this.tabs.getTitleAt(i).equalsIgnoreCase(name)) {
-                this.tabs.setTitleAt(i, name0);
+            if (this.tabs.getTitleAt(i).equalsIgnoreCase(oldName)) {
+                this.tabs.setTitleAt(i, newName);
                 //System.out.println("Rename at "+i+" from "+name+" to -> "+name0);
                 exit = true;
             }
@@ -334,7 +346,7 @@ public class MainView extends javax.swing.JFrame {
 
     /**
      * Gets a list of scene views.
-     * @return 
+     * @return The list of views within (Of scenes)
      */
     public List<SceneView> getSceneView() {
         List<SceneView> lst = new ArrayList<>();
@@ -346,7 +358,7 @@ public class MainView extends javax.swing.JFrame {
     
     /**
      * This pops up the actor wizard screen, gathers data, shuts down.
-     * @return 
+     * @return Generates a new actor, involves user's input.
      */
     private Actor actorWizard(List<File> actors) {
         
@@ -374,7 +386,7 @@ public class MainView extends javax.swing.JFrame {
     
     /**
      * Updates the graphic actor view.
-     * @param actors 
+     * @param actors The actor list (Reference data)
      */
     public void updateActors(List<Actor> actors) {
         ((SceneView)this.tabs.getSelectedComponent()).updateActorList(actors);
@@ -382,8 +394,8 @@ public class MainView extends javax.swing.JFrame {
     
     /**
      * This will update the scene's evidence list.
-     * @param evidences 
-     * @param ref 
+     * @param evidences The evidence list
+     * @param ref The reference of evidences
      */
     public void updateEvidences(List<Evidence> evidences, List<String> ref) {
         ((SceneView)this.tabs.getSelectedComponent()).updateEvidenceList(evidences, ref);
@@ -391,7 +403,7 @@ public class MainView extends javax.swing.JFrame {
     
     /**
      * This will help the user to create a new evidence.
-     * @return 
+     * @return new evidence, from user input.
      */
     private Evidence evidenceWizard(List<String> ref) {
         Evidence evidence = new Evidence();

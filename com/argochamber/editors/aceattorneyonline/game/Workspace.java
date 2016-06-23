@@ -1,10 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Ace Attorney Online Editor (AAOE) -  A Simple AAOE Case editor.
+ * Copyright (C) Argochamber Interactive 2016
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.argochamber.editors.aceattorneyonline.game;
 
+import com.argochamber.editors.aceattorneyonline.service.Log;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,7 +34,9 @@ import org.ini4j.Profile.Section;
 
 /**
  * This is a workspace object.
- *
+ * <p>
+ *  Contains all the data of the choosen root dir in order to make cases.
+ * </p>
  * @author Pablo
  */
 public class Workspace {
@@ -58,9 +73,8 @@ public class Workspace {
     /**
      * This will try to build a new workspace.
      *
-     * @param path
-     * @throws
-     * com.argochamber.editors.aceattorneyonline.game.InvalidWorkspaceException
+     * @param path The path to the workspace (The root dir)
+     * @throws  com.argochamber.editors.aceattorneyonline.game.InvalidWorkspaceException this is thrown when the workspace is so messed up that we cannot continue.
      */
     public Workspace(String path) throws InvalidWorkspaceException {
 
@@ -123,6 +137,7 @@ public class Workspace {
 
     /**
      * This will fill up scene data.
+     * @param server The 'server' folder.
      */
     private void fillScenes(File server) throws InvalidWorkspaceException, IOException {
         this.scenes = new ArrayList<>();
@@ -138,65 +153,74 @@ public class Workspace {
             //Read in each scene
             File[] scenes_f = scene_root.listFiles();
             for (File scene_folder : scenes_f) {
-                // --- FOR EACH SCENE --- //
-                //Important data
-                HashMap<String, Ini> cfg = new HashMap<>();
-                ArrayList<Evidence> evList = new ArrayList<>();
-                Scene scen = new Scene();
-                scen.setName(scene_folder.getName());
-                scen.setRoot(scene_folder);
-                for (File scene_file : scene_folder.listFiles()) {
-                    //System.out.println("Scanning "+scene_file.getName());
-                    //Ignore the evidence folder
-                    if (!scene_file.getName().equalsIgnoreCase(MIXED_EVIDENCE_FOLDER)) {
-                        // Fill each ini file.
-                        Ini ini = new Ini();
-                        ini.load(new FileReader(scene_file));
-                        cfg.put(scene_file.getName(), ini);
-                    } else {
-                        //If it is the folder of the evidences, fill out with reference names.
-                        File[] evi_images = scene_file.listFiles();
-                        Arrays.asList(evi_images).stream().map(File::getName).forEach(str -> scen.getEvidenceFiles().add(str));
+                try {
+                    // --- FOR EACH SCENE --- //
+                    //Important data
+                    HashMap<String, Ini> cfg = new HashMap<>();
+                    ArrayList<Evidence> evList = new ArrayList<>();
+                    Scene scen = new Scene();
+                    scen.setName(scene_folder.getName());
+                    scen.setRoot(scene_folder);
+                    for (File scene_file : scene_folder.listFiles()) {
+                        //System.out.println("Scanning "+scene_file.getName());
+                        //Ignore the evidence folder
+                        if (!scene_file.getName().equalsIgnoreCase(MIXED_EVIDENCE_FOLDER)) {
+                            // Fill each ini file.
+                            Ini ini = new Ini();
+                            ini.load(new FileReader(scene_file));
+                            cfg.put(scene_file.getName(), ini);
+                        } else {
+                            //If it is the folder of the evidences, fill out with reference names.
+                            File[] evi_images = scene_file.listFiles();
+                            Arrays.asList(evi_images).stream().map(File::getName).forEach(str -> scen.getEvidenceFiles().add(str));
+                        }
                     }
+                    //Once scene files are read, do the proper scan:
+                    Map<String, String> global = (Section)((Ini)cfg.get("init.ini")).get("Global");
+                    scen.setBackground(global.get("BackGround"));
+
+                    //Then the evidence data
+                    List<Evidence> evis = new ArrayList<>();
+                    for (int i = 0; i < cfg.get("init.ini").size() - 3; i++) {
+                        Section ev = (Section)((Ini)cfg.get("init.ini")).get("evi" + (i + 1));
+                        Evidence evi = new Evidence();
+                        evi.setName((String)ev.get("name"));
+                        evi.setDesc((String)ev.get("desc"));
+                        evi.setImage((String)ev.get("image"));
+                        evis.add(evi);
+                    }
+                    scen.setEvidences(evis);
+
+                    //The character reference list
+                    List<Actor> charNames = new ArrayList<>();
+
+                    Map<String, String> chars = (Section)((Ini)cfg.get("init.ini")).get("chars");
+                    Map<String, String> descs = (Section)((Ini)cfg.get("init.ini")).get("desc");
+                    Integer lim = Integer.parseInt(chars.get("number"));
+                    for (Integer i = 0; i < lim; i++) {
+                        //New actor!
+                        try {
+                            Actor act = new Actor();
+                            act.setDesc(descs.get(i.toString()));
+                            act.setName(chars.get(i.toString()));
+
+                            //THIS IS IMPORTANT: The evidences that the characters will have.
+                            String charN = (String)((Section)((Ini)cfg.get("char" + i + ".ini")).get("desc")).get("evi");
+                            List<Integer> evids = Arrays.asList(charN.split(","))
+                                    .stream()
+                                    .map(str -> Integer.parseInt(str.trim()))
+                                    .collect(Collectors.toList());
+                            act.setEvidenceIds(evids);
+                            charNames.add(act);
+                        } catch (NullPointerException ex) {
+                            Log.log(Level.SEVERE, "Actor is corrupted, or non existant (char" + i + ".ini not found?)");
+                        }
+                    }
+                    scen.setActors(charNames);
+                    this.scenes.add(scen);
+                } catch (NullPointerException ex) {
+                    Log.log(Level.SEVERE, "Scene corrupted!");
                 }
-                //Once scene files are read, do the proper scan:
-                Map<String, String> global = cfg.get("init.ini").get("Global");
-                scen.setBackground(global.get("BackGround"));
-
-                //Then the evidence data
-                List<Evidence> evis = new ArrayList<>();
-                for (int i = 0; i < cfg.get("init.ini").size() - 3; i++) {
-                    Section ev = cfg.get("init.ini").get("evi" + (i + 1));
-                    Evidence evi = new Evidence();
-                    evi.setName(ev.get("name"));
-                    evi.setDesc(ev.get("desc"));
-                    evi.setImage(ev.get("image"));
-                    evis.add(evi);
-                }
-                scen.setEvidences(evis);
-
-                //The character reference list
-                List<Actor> charNames = new ArrayList<>();
-
-                Map<String, String> chars = cfg.get("init.ini").get("chars");
-                Map<String, String> descs = cfg.get("init.ini").get("desc");
-                Integer lim = Integer.parseInt(chars.get("number"));
-                for (Integer i = 0; i < lim; i++) {
-                    Actor act = new Actor();
-                    act.setDesc(descs.get(i.toString()));
-                    act.setName(chars.get(i.toString()));
-
-                    //THIS IS IMPORTANT: The evidences that the characters will have.
-                    String charN = cfg.get("char" + i + ".ini").get("desc").get("evi");
-                    List<Integer> evids = Arrays.asList(charN.split(","))
-                            .stream()
-                            .map(str -> Integer.parseInt(str.trim()))
-                            .collect(Collectors.toList());
-                    act.setEvidenceIds(evids);
-                    charNames.add(act);
-                }
-                scen.setActors(charNames);
-                this.scenes.add(scen);
             }
         } else {
             throw new InvalidWorkspaceException("Corrupted server folder! Scenes not found!");
@@ -246,14 +270,26 @@ public class Workspace {
         }
     }
 
+    /**
+     * Workspace contained scenes
+     * @return list of scenes (Cases)
+     */
     public List<Scene> getScenes() {
         return scenes;
     }
 
+    /**
+     * Gets the available background names
+     * @return list bg names
+     */
     public List<File> getBackgrounds() {
         return backgrounds;
     }
 
+    /**
+     * Gets the character list
+     * @return total characters in.
+     */
     public List<File> getActors() {
         return actors;
     }
@@ -261,7 +297,7 @@ public class Workspace {
     /**
      * Deletes the given scene from the list.
      *
-     * @param scene
+     * @param scene The scene's reference that you want to delete.
      */
     public void deleteScene(Scene scene) {
         this.scenes.remove(scene);
@@ -270,8 +306,8 @@ public class Workspace {
     /**
      * This will create a new case.
      *
-     * @param newScene
-     * @return
+     * @param newScene the name of the case
+     * @return the scene's reference
      */
     public Scene addScene(String newScene) {
         Scene scene = new Scene();

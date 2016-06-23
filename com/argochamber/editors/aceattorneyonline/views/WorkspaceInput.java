@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Ace Attorney Online Editor (AAOE) -  A Simple AAOE Case editor.
+ * Copyright (C) Argochamber Interactive 2016
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.argochamber.editors.aceattorneyonline.views;
 
@@ -17,11 +29,11 @@ public class WorkspaceInput extends javax.swing.JFrame {
     /**
      * The controller's reference.
      */
-    private Controller controller;
+    private final Controller controller;
     
     /**
      * Creates new form WorkspaceInput
-     * @param c
+     * @param c Controller's reference
      */
     public WorkspaceInput(Controller c) {
         this.controller = c;
@@ -152,21 +164,36 @@ public class WorkspaceInput extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Useless
+     * @param evt ???
+     * @deprecated 
+     */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_browseButtonActionPerformed
 
+    /**
+     * Useless
+     * @param evt ???
+     * @deprecated 
+     */
     private void pathInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pathInputActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_pathInputActionPerformed
 
+    /**
+     * Useless
+     * @param evt ???
+     * @deprecated 
+     */
     private void enterPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterPathActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_enterPathActionPerformed
 
     /**
      * When mouse gets released from "OK", it will check if all the data is correct.
-     * @param evt 
+     * @param evt the event that fired the action.
      */
     private void enterPathMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enterPathMouseReleased
         
@@ -204,7 +231,7 @@ public class WorkspaceInput extends javax.swing.JFrame {
 
     /**
      * Sets the path value.
-     * @param get 
+     * @param get the path of the text field.
      */
     public void setPath(String get) {
         this.pathInput.setText(get);

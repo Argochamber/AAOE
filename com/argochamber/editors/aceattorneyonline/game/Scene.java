@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Ace Attorney Online Editor (AAOE) -  A Simple AAOE Case editor.
+ * Copyright (C) Argochamber Interactive 2016
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.argochamber.editors.aceattorneyonline.game;
 
@@ -47,12 +59,12 @@ public class Scene {
 
     /**
      * Bulk setup.
-     * @param actors
-     * @param evidences
-     * @param evidenceFiles
-     * @param background
-     * @param name
-     * @param root 
+     * @param actors List of actors
+     * @param evidences List of evidences
+     * @param evidenceFiles List of evidence files
+     * @param background List of backgrounds
+     * @param name Name of the case
+     * @param root Root folder
      */
     public Scene(List<Actor> actors, List<Evidence> evidences, List<String> evidenceFiles, String background, String name, File root) {
         this.actors = actors;
@@ -77,52 +89,96 @@ public class Scene {
     
     /**
      * Gets the folder that holds the scene data.
-     * @return 
+     * @return root's reference
      */
     public File getRoot() {
         return root;
     }
 
+    /**
+     * Setter for the scene's root folder
+     * @param root the folder reference
+     */
     public void setRoot(File root) {
         this.root = root;
     }
 
+    /**
+     * Gets the name of the scene (The case)
+     * @return the case's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the case's name
+     * @param name new case name
+     */
     public void setName(String name) {
         this.name = name;
     }
     
+    /**
+     * Gets the characters of the scene
+     * @return actor list
+     */
     public List<Actor> getActors() {
         return actors;
     }
 
+    /**
+     * Sets the characters in the case
+     * @param actors new actor list
+     */
     public void setActors(List<Actor> actors) {
         this.actors = actors;
     }
 
+    /**
+     * Gets the evidence's list
+     * @return evi list
+     */
     public List<Evidence> getEvidences() {
         return evidences;
     }
 
+    /**
+     * Sets the evidences list
+     * @param evidences new evi list
+     */
     public void setEvidences(List<Evidence> evidences) {
         this.evidences = evidences;
     }
 
+    /**
+     * Gets the bg name
+     * @return bg name
+     */
     public String getBackground() {
         return background;
     }
 
+    /**
+     * Sets the bg name
+     * @param background new bg 
+     */
     public void setBackground(String background) {
         this.background = background;
     }
 
+    /**
+     * Gets the list of evi files
+     * @return a list
+     */
     public List<String> getEvidenceFiles() {
         return evidenceFiles;
     }
 
+    /**
+     * Sets the files
+     * @param evidenceFiles new list
+     */
     public void setEvidenceFiles(List<String> evidenceFiles) {
         this.evidenceFiles = evidenceFiles;
     }

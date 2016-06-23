@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Ace Attorney Online Editor (AAOE) -  A Simple AAOE Case editor.
+ * Copyright (C) Argochamber Interactive 2016
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.argochamber.editors.aceattorneyonline.views;
 
@@ -17,7 +29,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
- *
+ * The Evidence's data view.
  * @author Pablo
  */
 public class EvidenceView extends javax.swing.JPanel {
@@ -44,10 +56,10 @@ public class EvidenceView extends javax.swing.JPanel {
     
     /**
      * Creates new form EvidenceView
-     * @param ev
-     * @param evis
-     * @param scene
-     * @param c
+     * @param ev The evidence that we want to represent
+     * @param evis Absolute evidence names
+     * @param scene The scene parent
+     * @param c Controller's reference
      */
     public EvidenceView(Evidence ev, List<String> evis, Scene scene, Controller c) {
         initComponents();
@@ -226,7 +238,7 @@ public class EvidenceView extends javax.swing.JPanel {
 
     /**
      * Gets the evidence's image.
-     * @return 
+     * @return Text field image's text
      */
     public String getEviImage() {
         return this.evPng.getText();
@@ -234,7 +246,7 @@ public class EvidenceView extends javax.swing.JPanel {
 
     /**
      * Gets the Evidence's description.
-     * @return 
+     * @return The description contained
      */
     public String getEviDesc() {
         return this.evDesc.getText();
@@ -242,7 +254,7 @@ public class EvidenceView extends javax.swing.JPanel {
     
     /**
      * Gets the evidence's name.
-     * @return 
+     * @return the name contained
      */
     public String getEviName() {
         return this.evName.getText();
@@ -250,7 +262,7 @@ public class EvidenceView extends javax.swing.JPanel {
 
     /**
      * Generates a new evidence.
-     * @return 
+     * @return Casted version of the view.
      */
     public Evidence asEvidence() {
         Evidence evi = new Evidence();

@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Ace Attorney Online Editor (AAOE) -  A Simple AAOE Case editor.
+ * Copyright (C) Argochamber Interactive 2016
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.argochamber.editors.aceattorneyonline.views;
 
@@ -34,8 +46,8 @@ public class SceneView extends javax.swing.JPanel {
     /**
      * Creates new form SceneView
      *
-     * @param controller
-     * @param scene
+     * @param controller Controller's reference
+     * @param scene The reference to the scene that will be represented.
      */
     public SceneView(Controller controller, Scene scene) {
         this.controller = controller;
@@ -216,8 +228,8 @@ public class SceneView extends javax.swing.JPanel {
     
     /**
      * Adds actor data to the view.
-     * @param actor
-     * @param workspace 
+     * @param actor Actor's reference
+     * @param workspace Workspace reference
      */
     public void addActor(Actor actor, Workspace workspace) {
         ActorView aview = new ActorView(actor, this.scene, this.controller);
@@ -227,8 +239,8 @@ public class SceneView extends javax.swing.JPanel {
     
     /**
      * Adds the evidence.
-     * @param evi
-     * @param evList 
+     * @param evi The evidence data
+     * @param evList The list of evidences, mapped to string
      */
     public void addEvidence(Evidence evi, List<String> evList) {
         EvidenceView eviview = new EvidenceView(evi, evList, this.scene, controller);
@@ -238,7 +250,7 @@ public class SceneView extends javax.swing.JPanel {
 
     /**
      * Generate an actor list from the view's data.
-     * @return 
+     * @return Raw actor reference list
      */
     public List<Actor> getActorList() {
         List<Actor> actors = Arrays.asList(this.charPane.getComponents()).stream()
@@ -250,7 +262,7 @@ public class SceneView extends javax.swing.JPanel {
     
     /**
      * Updates the graphical data.
-     * @param actors 
+     * @param actors New actor data set.
      */
     void updateActorList(List<Actor> actors) {
         this.charPane.removeAll();
@@ -259,8 +271,8 @@ public class SceneView extends javax.swing.JPanel {
     
     /**
      * Performs an update of the graphical data.
-     * @param evidences 
-     * @param ref
+     * @param evidences the evidences list (data)
+     * @param ref the list of it's references (names)
      */
     void updateEvidenceList(List<Evidence> evidences, List<String> ref) {
         this.evPane.removeAll();
@@ -269,7 +281,7 @@ public class SceneView extends javax.swing.JPanel {
 
     /**
      * Getter for the scene data reference.
-     * @return 
+     * @return the scene's reference that the view represents
      */
     public Scene getScene() {
         return this.scene;
@@ -277,7 +289,7 @@ public class SceneView extends javax.swing.JPanel {
 
     /**
      * Retrieves a list of evidences.
-     * @return 
+     * @return the list contained in the view.
      */
     public List<Evidence> getEvidences() {
         List<Evidence> evidences = Arrays.asList(this.evPane.getComponents()).stream()
